@@ -79,7 +79,12 @@ function removeUser (args) {
 function listUsers (args) {
   const pgURL = args['pg-url']
   if (!pgURL) return Promise.reject(new Error('No postgres URL given! (e.g. --pg-url postgres://localhost/db)'))
-  const client = new pg.Client(pgURL)
+  const client = new pg.Client({
+    connectionString: pgURL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+   })  
   return new Promise((resolve, reject) => {
     client.connect(err => {
       if (err) return reject(err)
